@@ -28,8 +28,8 @@ export default class App extends React.Component<{}, State> {
   }
 
   async loadData() {
-    // const { data } = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
-    const { data } = (await (await fetch("https://sitnu.localhost/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    const { data } = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    // const { data } = (await (await fetch("https://sitnu.localhost/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
 
     this.setState({ data });
   }
@@ -46,7 +46,7 @@ export default class App extends React.Component<{}, State> {
       .split(",")
       .map(s => Number(s));
 
-    this.setState(({ courses }) => ({ courses: [...courses, ...imports].filter((item, index, arr) => arr.indexOf(item) === index) }));
+    this.setState(({ courses }) => ({ courses: [...courses, ...imports].filter((item, index, arr) => arr.indexOf(item) === index) }), this.saveCourses.bind(this));
   }
 
   saveCourses() {
