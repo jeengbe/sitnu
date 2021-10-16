@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import Login from "./Login";
 import MainView from "./MainView";
-// import * as serviceWorker from "./serviceWorkerRegistration";
+import * as serviceWorker from "./serviceWorkerRegistration";
 
 
 class Shell extends React.Component {
@@ -22,4 +22,4 @@ ReactDOM.render(
 );
 
 
-// serviceWorker.register();
+serviceWorker.register();

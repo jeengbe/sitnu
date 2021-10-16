@@ -8,10 +8,11 @@ interface State {
   data: UntisData | null;
   courses: number[];
   view: "today" | "tomorrow" | "settings";
+  offline: boolean;
 }
 
 // const today = moment("17/10/2021", "DD/MM/YYYY");
-const today = moment().add(2, "days");
+const today = moment();
 const tomorrow = moment(today).add(1, "days");
 
 export default class App extends React.Component<{}, State> {
@@ -19,6 +20,7 @@ export default class App extends React.Component<{}, State> {
     data: null,
     courses: [],
     view: "today",
+    offline: false,
   };
 
   componentDidMount() {
@@ -27,10 +29,11 @@ export default class App extends React.Component<{}, State> {
   }
 
   async loadData() {
-    // const { data } = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + moment(today).add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
-    const { data } = (await (await fetch("https://sitnu.localhost/api/timetable/" + moment(today).add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    await new Promise(resolve => window.setTimeout(resolve, 400));
+    const data = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + moment(today).add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    // const data = (await (await fetch("https://sitnu.localhost/api/timetable/" + moment(today).add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
 
-    this.setState({ data });
+    this.setState({ data: data.data, offline: "offline" in data });
   }
 
   checkImport() {
@@ -76,8 +79,8 @@ export default class App extends React.Component<{}, State> {
   }
 
   render() {
-    const { data, courses, view } = this.state;
-    const splashes = ["Daten werden geladen", "Ich starte", "Möchtest du einen Keks?", "Geduld bitte", "Immer schön nett sein", "Text me", "I love you"];
+    const { data, courses, view, offline } = this.state;
+    const splashes = ["I love you", "Always be kind", "Be the best you", "Impossible ist just an opinion", "Invest in your dreams", "Want to go out?", "What we think, we become", "Just do it!", "And still, I rise", "Search, and you will find", "π", "Hello There"];
     if (data === null)
       return (
         <div className="center">
@@ -108,6 +111,16 @@ export default class App extends React.Component<{}, State> {
 
     return (
       <>
+        {offline ? (
+          <div className="offline">
+            <h3>Du bist offline.</h3>
+            <span>
+              Die angezeigten Daten stammen vom <i>todo</i>
+            </span>
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="day">
           <div className="daySelection">
             <button className={view === "today" ? "selected" : ""} onClick={() => this.setState({ view: "today" })}>
@@ -127,6 +140,7 @@ export default class App extends React.Component<{}, State> {
           ) : (
             <Settings elements={elements} selectedCourses={courses} toggleCourse={this.toggleCourse.bind(this)} />
           )}
+          {offline ? <div style={{ height: 75, display: "block" }}></div> : <></>}
         </div>
       </>
     );

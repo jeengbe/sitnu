@@ -1,5 +1,7 @@
 export interface Untis {
   data: UntisData;
+  date?: number;
+  offline?: true;
 }
 
 export interface UntisData {
