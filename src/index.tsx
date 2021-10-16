@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import Login from "./Login";
 import MainView from "./MainView";
+// import * as serviceWorker from "./serviceWorkerRegistration";
 
 
 class Shell extends React.Component {
@@ -19,3 +20,6 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+
+// serviceWorker.register();

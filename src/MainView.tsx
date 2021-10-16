@@ -11,9 +11,8 @@ interface State {
 }
 
 // const today = moment("17/10/2021", "DD/MM/YYYY");
-const today = moment();
-const date = Number(today.format("YYYYMMDD"));
-const dateTmr = Number(today.add("1", "days").format("YYYYMMDD"));
+const today = moment().add(2, "days");
+const tomorrow = moment(today).add(1, "days");
 
 export default class App extends React.Component<{}, State> {
   state: State = {
@@ -28,8 +27,8 @@ export default class App extends React.Component<{}, State> {
   }
 
   async loadData() {
-    const { data } = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
-    // const { data } = (await (await fetch("https://sitnu.localhost/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    // const { data } = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + moment(today).add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    const { data } = (await (await fetch("https://sitnu.localhost/api/timetable/" + moment(today).add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
 
     this.setState({ data });
   }
@@ -46,7 +45,14 @@ export default class App extends React.Component<{}, State> {
       .split(",")
       .map(s => Number(s));
 
-    this.setState(({ courses }) => ({ courses: [...courses, ...imports].filter((item, index, arr) => arr.indexOf(item) === index) }), this.saveCourses.bind(this));
+    this.setState(
+      ({ courses }) => ({ courses: [...courses, ...imports].filter((item, index, arr) => arr.indexOf(item) === index) }),
+      () => {
+        alert("Kurse erfolgreich importiert");
+        this.saveCourses();
+        window.location.search = "";
+      }
+    );
   }
 
   saveCourses() {
@@ -97,24 +103,32 @@ export default class App extends React.Component<{}, State> {
 
     const periods = elementPeriods[classId + ""]
       .filter(period => courses.includes(period.elements[2].id))
-      .filter(period => period.date === (view === "today" ? date : dateTmr))
+      .filter(period => period.date === (view === "today" ? Number(today.format("YYYYMMDD")) : Number(tomorrow.format("YYYYMMDD"))))
       .sort((a, b) => a.startTime - b.startTime);
 
     return (
-      <div className="day">
-        <div className="daySelection">
-          <button className={view === "today" ? "selected" : ""} onClick={() => this.setState({ view: "today" })}>
-            Heute
-          </button>
-          <button className={view === "tomorrow" ? "selected" : ""} onClick={() => this.setState({ view: "tomorrow" })}>
-            Morgen
-          </button>
-          <button className={view === "settings" ? "selected" : ""} onClick={() => this.setState({ view: "settings" })}>
-            Einstellungen
-          </button>
+      <>
+        <div className="day">
+          <div className="daySelection">
+            <button className={view === "today" ? "selected" : ""} onClick={() => this.setState({ view: "today" })}>
+              Heute
+            </button>
+            <button className={view === "tomorrow" ? "selected" : ""} onClick={() => this.setState({ view: "tomorrow" })}>
+              Morgen
+            </button>
+            <button className={view === "settings" ? "selected" : ""} onClick={() => this.setState({ view: "settings" })}>
+              Einstellungen
+            </button>
+          </div>
+          {view === "today" || view === "tomorrow" ? (
+            <>
+              <Day elements={elements} periods={periods} /> <span className="date">Ausgewähltes Datum: {(view === "today" ? today : tomorrow).format("DD/MM/YYYY")}</span>
+            </>
+          ) : (
+            <Settings elements={elements} selectedCourses={courses} toggleCourse={this.toggleCourse.bind(this)} />
+          )}
         </div>
-        {view === "today" || view === "tomorrow" ? <Day elements={elements} periods={periods} /> : <Settings elements={elements} selectedCourses={courses} toggleCourse={this.toggleCourse.bind(this)} />}
-      </div>
+      </>
     );
   }
 }
