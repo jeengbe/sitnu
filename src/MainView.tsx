@@ -24,14 +24,29 @@ export default class App extends React.Component<{}, State> {
 
   componentDidMount() {
     this.loadData();
-    this.loadCourses();
+    this.loadCourses().then(() => this.checkImport());
   }
 
   async loadData() {
-    const { data } = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
-    // const { data } = (await (await fetch("https://sitnu.localhost/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    // const { data } = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    const { data } = (await (await fetch("https://sitnu.localhost/api/timetable/" + today.add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
 
     this.setState({ data });
+  }
+
+  checkImport() {
+    const importsS = window.location.search
+      .substr(1)
+      .split("&")
+      .find(s => s.startsWith("import="));
+    if (importsS === undefined) return;
+
+    const imports = importsS
+      .substr("import=".length)
+      .split(",")
+      .map(s => Number(s));
+
+    this.setState(({ courses }) => ({ courses: [...courses, ...imports].filter((item, index, arr) => arr.indexOf(item) === index) }));
   }
 
   saveCourses() {
@@ -42,8 +57,8 @@ export default class App extends React.Component<{}, State> {
     window.localStorage.setItem("courses", JSON.stringify(this.state.courses));
   }
 
-  loadCourses() {
-    this.setState(() => ({ courses: JSON.parse(localStorage.getItem("courses") ?? "[]") }));
+  loadCourses(): Promise<void> {
+    return new Promise(resolve => this.setState(() => ({ courses: JSON.parse(localStorage.getItem("courses") ?? "[]") }), resolve));
   }
 
   toggleCourse(course: number) {
