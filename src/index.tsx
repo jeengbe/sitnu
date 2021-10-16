@@ -1,17 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { parseCookies } from "nookies";
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.scss";
+import Login from "./Login";
+import MainView from "./MainView";
+
+
+class Shell extends React.Component {
+  render() {
+    const cookies = parseCookies();
+    return "token" in cookies ? <MainView /> : <Login reload={() => this.forceUpdate()} />;
+  }
+}
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Shell />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

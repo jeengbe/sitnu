@@ -1,0 +1,159 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap");
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  background-color: rgba(33, 33, 33);
+  color: #fcf8e3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.center {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login {
+  & > input,
+  button {
+    padding: 15px 20px;
+    background-color: #424242;
+    color: #fcf8e3;
+    font-family: "Nunito", sans-serif;
+    border: 0;
+    border-radius: 3px;
+    font-size: 1.25rem;
+  }
+
+  & > button {
+    cursor: pointer;
+
+    &:hover {
+      background-color: #2c2c2c;
+    }
+  }
+}
+
+.settings {
+  label {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    cursor: pointer;
+
+    & > input[type="checkbox"] {
+      margin-right: 5px;
+      height: 25px;
+      width: 25px;
+      background-color: #424242;
+      color: #fcf8e3;
+      font-family: "Nunito", sans-serif;
+      border: 0;
+      border-radius: 3px;
+      font-size: 1.25rem;
+    }
+  }
+}
+
+.day {
+  padding: 10px 20px;
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+
+  & > .daySelection {
+    display: flex;
+    margin-bottom: 15px;
+    gap: 10px;
+    border-bottom: 2px solid #555555;
+
+    > button {
+      flex-basis: 100%;
+      padding: 5px 10px;
+      border: 0;
+      font-family: "Nunito", sans-serif;
+      background-color: #424242;
+      color: #fcf8e3;
+      cursor: pointer;
+      border-radius: 3px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+
+      &.selected {
+        background-color: #2c2c2c;
+      }
+    }
+  }
+
+  & > .periods {
+    $h: 65px;
+    $b: 5px;
+    display: grid;
+    grid-template-rows: [l-740] $h [l-825] $b [l-830] $h [l-915] 4 * $b [l-935] $h [l-1020] $h [l-1105] 3 * $b [l-1120] $h [l-1205] $b [l-1210] $h [l-1255] $b [l-1300] $h [l-1345] $b [l-1350] $h [l-1435] $b [l-1440] $h [l-1525] $b [l-1530] $h [l-1615] $b [l-1620] $h [l-1705];
+    grid-template-columns: 50px auto;
+    & > .time {
+      grid-column: 1;
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid #555555;
+      border-bottom: 1px solid #555555;
+      font-size: 0.8rem;
+      position: relative;
+
+      & > span:last-child {
+        position: absolute;
+        bottom: 0;
+      }
+    }
+
+    & > .periodCell {
+      .period {
+        flex-basis: 100%;
+        &.STANDARD {
+          background: #424242;
+        }
+        &.CANCEL {
+          background: #e64a19;
+          opacity: 0.9;
+        }
+        &.ROOMSUBSTITUTION,
+        &.SUBSTITUTION {
+          background: #689f38;
+        }
+        font-size: 0.8rem;
+      }
+      &.empty {
+        border-top: 1px solid #555555;
+        border-bottom: 1px solid #555555;
+      }
+      &:not(.empty) {
+        &:not(.l-1020) {
+          border-top: 1px solid #555555;
+        }
+        &:not(.l-935) {
+          border-bottom: 1px solid #555555;
+        }
+      }
+      display: flex;
+      flex-direction: row;
+
+      grid-column: 2;
+      text-align: center;
+    }
+  }
+}
