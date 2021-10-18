@@ -1,6 +1,5 @@
 <?php
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
 
 if (($_COOKIE["token"] ?? "") !== "j82R8Gez") {
   http_response_code(403);
@@ -12,7 +11,8 @@ $URL = explode("/", $_GET["api"] ?? "");
 $inc = null;
 
 $incs = [
-  "timetable/_" => "timetable.php"
+  "timetable/_" => "timetable.php",
+  "subscribe" => "subscribe.php",
 ];
 
 foreach ($incs as $incp => $incf) {
@@ -27,7 +27,7 @@ foreach ($incs as $incp => $incf) {
 }
 
 if ($inc !== null) {
-  (function ($inc) use (&$DB, &$URL, &$SID, &$SESSID) {
+  (function ($inc) use (&$URL) {
     /** @var string $inc */
     $data = [];
     $data = include __DIR__ . "/include/$inc";

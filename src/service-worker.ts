@@ -63,6 +63,7 @@ registerRoute(
     return true;
   },
   new NetworkFirst({
+    networkTimeoutSeconds: 3,
     plugins: [{
       cacheWillUpdate: async params => {
         const responseText = await params.response.text();
@@ -85,3 +86,28 @@ registerRoute(
     }]
   })
 );
+
+self.addEventListener("push", async event => {
+  try {
+    const data = event.data?.json();
+    if (data === undefined) return;
+
+    await self.registration.showNotification(data.state === "CANCEL" ? "Entfall" : "Änderung", {
+      body: "Eine Stunde " + (data.state === "CANCEL" ? "entfällt" : "wurde geändert"),
+      actions: [{
+        action: "explore", title: "Vertretungsplan öffnen"
+      }]
+    });
+
+  } catch (err) {
+    console.error(err);
+    console.log(event, event.data?.text());
+  }
+});
+
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+  if (event.action !== "close") {
+    self.clients.openWindow("/");
+  }
+});

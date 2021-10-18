@@ -23,3 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 /api/include/sessid
+/api/subs
+/api/cancelPeriodSubs
+/api/substPeriodSubs
+/api/vendor

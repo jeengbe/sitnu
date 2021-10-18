@@ -1,5 +1,6 @@
 import moment from "moment";
 import React from "react";
+import { DOMAIN } from ".";
 import { Untis, UntisData } from "./data";
 import Day from "./Day";
 import Settings from "./Settings";
@@ -30,8 +31,7 @@ export default class App extends React.Component<{}, State> {
 
   async loadData() {
     await new Promise(resolve => window.setTimeout(resolve, 400));
-    const data = (await (await fetch("https://sitnu.jeeng.be/api/timetable/" + moment(today).add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
-    // const data = (await (await fetch("https://sitnu.localhost/api/timetable/" + moment(today).add(1, "days").format("YYYY-MM-DD"))).json()) as Untis;
+    const data = (await (await fetch(DOMAIN + "/api/timetable/" + tomorrow.format("YYYY-MM-DD"))).json()) as Untis;
 
     this.setState({ data: data.data, offline: "offline" in data });
   }
@@ -80,7 +80,7 @@ export default class App extends React.Component<{}, State> {
 
   render() {
     const { data, courses, view, offline } = this.state;
-    const splashes = ["I love you", "Always be kind", "Be the best you", "Impossible ist just an opinion", "Invest in your dreams", "Want to go out?", "What we think, we become", "Just do it!", "And still, I rise", "Search, and you will find", "π", "Hello There"];
+    const splashes = ["I love you", "Always be kind", "Be the best you", "Impossible ist just an opinion", "Invest in your dreams", "Want to go out?", "What we think, we become", "Just do it!", "And still, I rise", "Search, and you will find", "π = e = √g", "Hello There"];
     if (data === null)
       return (
         <div className="center">
