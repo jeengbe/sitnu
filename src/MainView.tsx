@@ -25,13 +25,13 @@ export default class App extends React.Component<{}, State> {
   };
 
   componentDidMount() {
-    this.loadData();
     this.loadCourses().then(() => this.checkImport());
+    this.loadData();
   }
 
   async loadData() {
     await new Promise(resolve => window.setTimeout(resolve, 400));
-    const data = (await (await fetch(DOMAIN + "/api/timetable/" + tomorrow.format("YYYY-MM-DD"))).json()) as Untis;
+    const data = (await (await fetch(DOMAIN + "/api/timetable/" + tomorrow.format("YYYY-MM-DD") + "?c=" + JSON.stringify(this.state.courses))).json()) as Untis;
 
     this.setState({ data: data.data, offline: "offline" in data });
   }
@@ -80,7 +80,7 @@ export default class App extends React.Component<{}, State> {
 
   render() {
     const { data, courses, view, offline } = this.state;
-    const splashes = ["I love you", "Always be kind", "Be the best you", "Impossible ist just an opinion", "Invest in your dreams", "Want to go out?", "What we think, we become", "Just do it!", "And still, I rise", "Search, and you will find", "π = e = √g", "Hello There"];
+    const splashes = ["I love you", "Always be kind", "Be the best you", "Impossible ist just an opinion", "The future is near", "Want to go out?", "What we think, we become", "Just do it!", "Stay with me", "Search, and you will find", "π = e = √g", "Hello There", "Talk to me", "She's brave", "Shit, he's good", "Don't leave me"];
     if (data === null)
       return (
         <div className="center">
@@ -114,9 +114,6 @@ export default class App extends React.Component<{}, State> {
         {offline ? (
           <div className="offline">
             <h3>Du bist offline.</h3>
-            <span>
-              Die angezeigten Daten stammen vom <i>todo</i>
-            </span>
           </div>
         ) : (
           <></>
