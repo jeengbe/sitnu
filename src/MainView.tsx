@@ -12,7 +12,6 @@ interface State {
   offline: boolean;
 }
 
-// const today = moment("17/10/2021", "DD/MM/YYYY");
 const today = moment();
 const tomorrow = moment(today).add(1, "days");
 
@@ -27,6 +26,11 @@ export default class App extends React.Component<{}, State> {
   componentDidMount() {
     this.loadCourses().then(() => this.checkImport());
     this.loadData();
+    window.onpopstate = ev => {
+      if ("view" in ev.state) {
+        this.setState({ view: ev.state.view });
+      }
+    }
   }
 
   async loadData() {
@@ -78,9 +82,14 @@ export default class App extends React.Component<{}, State> {
     }
   }
 
+  changeView(view: State["view"]) {
+    this.setState({ view });
+    history.pushState({ view }, "Sitnu");
+  }
+
   render() {
     const { data, courses, view, offline } = this.state;
-    const splashes = ["I love you", "Always be kind", "Be the best you", "Impossible ist just an opinion", "The future is near", "Want to go out?", "What we think, we become", "Just do it!", "Stay with me", "Search, and you will find", "π = e = √g", "Hello There", "Talk to me", "She's brave", "Shit, he's good", "Don't leave me"];
+    const splashes = ["I love you", "Always be kind", "Be the best you", "Impossible ist just an opinion", "The future is near", "Want to go out?", "What we think, we become", "Just do it!", "Stay with me", "Search, and you will find", "π = e = √g", "Hello There", "Talk to me", "She's brave", "Shit, he's good", "Don't leave me", "¿Cómo estás?"];
     if (data === null)
       return (
         <div className="center">
@@ -120,13 +129,13 @@ export default class App extends React.Component<{}, State> {
         )}
         <div className="day">
           <div className="daySelection">
-            <button className={view === "today" ? "selected" : ""} onClick={() => this.setState({ view: "today" })}>
+            <button className={view === "today" ? "selected" : ""} onClick={() => this.changeView("today" )}>
               Heute
             </button>
-            <button className={view === "tomorrow" ? "selected" : ""} onClick={() => this.setState({ view: "tomorrow" })}>
+            <button className={view === "tomorrow" ? "selected" : ""} onClick={() => this.changeView("tomorrow")}>
               Morgen
             </button>
-            <button className={view === "settings" ? "selected" : ""} onClick={() => this.setState({ view: "settings" })}>
+            <button className={view === "settings" ? "selected" : ""} onClick={() => this.changeView("settings")}>
               Einstellungen
             </button>
           </div>
