@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import moment from "moment";
 import React from "react";
 import { DOMAIN } from ".";
@@ -26,11 +27,15 @@ export default class App extends React.Component<{}, State> {
   componentDidMount() {
     this.loadCourses().then(() => this.checkImport());
     this.loadData();
+    if (!history.state) {
+      history.replaceState({ view: "today" }, "Sitnu");
+    }
     window.onpopstate = ev => {
+      console.log(ev);
       if ("view" in ev.state) {
         this.setState({ view: ev.state.view });
       }
-    }
+    };
   }
 
   async loadData() {
@@ -129,7 +134,7 @@ export default class App extends React.Component<{}, State> {
         )}
         <div className="day">
           <div className="daySelection">
-            <button className={view === "today" ? "selected" : ""} onClick={() => this.changeView("today" )}>
+            <button className={view === "today" ? "selected" : ""} onClick={() => this.changeView("today")}>
               Heute
             </button>
             <button className={view === "tomorrow" ? "selected" : ""} onClick={() => this.changeView("tomorrow")}>
