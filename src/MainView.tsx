@@ -31,7 +31,6 @@ export default class App extends React.Component<{}, State> {
       history.replaceState({ view: "today" }, "Sitnu");
     }
     window.onpopstate = ev => {
-      console.log(ev);
       if ("view" in ev.state) {
         this.setState({ view: ev.state.view });
       }
